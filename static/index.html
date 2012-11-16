@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <title>微博女神</title>
+    <meta content="text/html;charset=utf8" />
+    <style type="text/css">
+        #container {
+             width: 1000px;
+             margin: 0 auto;
+             margin-top : 60px;
+             font: 12px/1.25 Tahoma,Arial,Helvetica,"Microsoft Yahei",sans-serif;
+         }
+        #container .pin{
+            float: left;
+            display: none;
+            width: 180px;
+            height: 314px;
+            background: #FAFAFA;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #CFCFCF;
+            margin:8px;
+            overflow: hidden;
+            opacity: 1;
+            zoom: 1;
+        }
+        #container .pin .avatar{
+            display: block;
+            border: 0
+        }
+        #container .name{
+            padding: 10px ;
+            border-bottom: 1px solid #CFCFCF;
+        }
+        #container .name a{
+            font-size: 16px;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #container .pin .info{
+            padding: 10px;
+            background: #F2F2F2;
+            border-bottom: 1px solid #CFCFCF;
+        }
+        #container .profile{
+            padding: 10px;
+        }
+        #bottom{
+            clear: both;
+            text-align: center
+        }
+        .none{
+            display: none
+        }
+        #top{
+            background: url("http://img.t.sinajs.cn/t4/x5style/images/nav/nav_bg.png?id=1350375249297") repeat-x scroll left 4px #F2F2F2;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+            height: 53px;
+            min-width: 1000px;
+            z-index: 999;
+            position: fixed;
+            width: 100%;
+            left: 0;
+            top: 0;
+        }
+        .search{
+            _display: inline;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            border: 1px solid #C2C0C0;
+        }
+        .search .btn {
+            width: 28px;
+            height: 27px;
+            overflow: hidden;
+            border: none;
+            background: url("http://img.t.sinajs.cn/t4/x5style/images/nav/nav_bg.png?id=1350375249297") no-repeat 0 -150px;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        .search .text {
+            border: none;
+            border-right: 1px solid #C2C0C0;
+            padding: 0 2px;
+            line-height: 27px	9;
+            width: 128px;
+            height: 27px;
+            background: #FAF7F7;
+            vertical-align: top;
+            color: #999;
+        }
+
+    </style>
+</head>
+<body style="background-color: #F4F4F4">
+<div id="top" ><img style="width:60px;float: left" src="http://d.lanrentuku.com/down/png/0910/tourism-ICO/liberty.png"/>
+    <div class="search" >
+        <input name="sex" type="radio" id="female" class="W_checkbox"  style="margin-top:7px;*margin-top:4px;">
+        <label class="cholab">帅锅</label>
+        <input name="sex" type="radio" id="male" class="W_checkbox"  checked="checked">
+        <label class="cholab" >女神</label>
+        <input type="text"  class="text" value="华北电力大学" placeholder="大学名称"><input  type="button" class="btn">
+    </div>
+</div>
+<div id="container"></div>
+<div id="bottom"><img style="margin:0 auto" src="http://www.google.com.hk/images/loading.gif" alt=""/></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+    var search = {
+        scho : '华北电力大学',
+        sex  : 'f',
+        page : 1
+    }
+    $('.search .btn').bind('click',function(e){
+        search.sex = document.getElementById("female").checked ? 'm' : 'f'
+        search.scho= $('.search [type="text"]').val()
+        search.page = 1
+        $('#container').empty()
+        res()
+        res()
+        res()
+    })
+    function res(){
+        $.ajax({
+            type: "get",
+            url: "./getuser",
+            data: "scho="+search.scho+"&sex="+search.sex+"&page=" + search.page ++,
+            dataType : "json",
+            success: function(msg){
+               var container = $('#container')
+               msg.data.forEach(function(person){
+                   var pin = $('<div class="pin">'+
+                                  '<img class="avatar" src="'+person.pic +'" />'+
+                                  '<div class="name"><a target="_blank" href="http://weibo.com/'+person.id+'">'+person.name+'</a></div>'   +
+                                  '<div class="info">关注：'+person.follow+'|粉丝：'+person.fans+'<br/>'+person.location+
+                                  '</div> ' +
+                                  '<div class="profile">' + person.profile + '</div> ' +
+                               '</div>')
+
+                  $('.avatar',pin).bind('load', function(e) {
+                       $(e.target.parentElement).fadeIn("slow");
+                   })
+                   container.append(pin)
+               })
+            }
+        })
+    }
+    res()
+    res()
+    res()
+    window.addEventListener("scroll",function(){
+        if($('#bottom').get(0).getBoundingClientRect().bottom <= screen.height)
+           res()
+    })
+</script>
+</body>
+        
