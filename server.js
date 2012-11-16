@@ -4,7 +4,7 @@ var weibo = require("weiboapi")
 var fs = require("fs")
 var api = null
 
-weibo.login('birdroid@126.com','birdroid345',function (err,API){
+weibo.login('birdroid@126.com','xxx',function (err,API){
   if(!err){
       api = API
   }
