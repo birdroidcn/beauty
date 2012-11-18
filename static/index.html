@@ -89,7 +89,7 @@
             height: 27px;
             background: #FAF7F7;
             vertical-align: top;
-            color: #999;
+            line-height:27px;
         }
 
     </style>
@@ -97,7 +97,7 @@
 <body style="background-color: #F4F4F4">
 <div id="top" ><img style="width:60px;float: left" src="http://d.lanrentuku.com/down/png/0910/tourism-ICO/liberty.png"/>
     <div class="search" >
-        <input name="sex" type="radio" id="female" class="W_checkbox"  style="margin-top:7px;*margin-top:4px;">
+        <input name="sex" type="radio" id="female" class="W_checkbox"  style="margin-top:7px;margin-top:4px\9;">
         <label class="cholab">帅锅</label>
         <input name="sex" type="radio" id="male" class="W_checkbox"  checked="checked">
         <label class="cholab" >女神</label>
@@ -114,6 +114,7 @@
         sex  : 'f',
         page : 1
     }
+    
     $('.search .btn').bind('click',function(e){
         search.sex = document.getElementById("female").checked ? 'm' : 'f'
         search.scho= $('.search [type="text"]').val()
@@ -127,11 +128,17 @@
         $.ajax({
             type: "get",
             url: "./getuser",
-            data: "scho="+search.scho+"&sex="+search.sex+"&page=" + search.page ++,
+            data: "scho="+encodeURIComponent(search.scho)+
+                  "&sex="+search.sex+"&page=" + search.page ++,
             dataType : "json",
             success: function(msg){
+               if(typeof msg != 'object'){
+               	console.log(msg)
+               	return
+               }
+               
                var container = $('#container')
-               msg.data.forEach(function(person){
+               $.each(msg.data,function(i,person){
                    var pin = $('<div class="pin">'+
                                   '<img class="avatar" src="'+person.pic +'" />'+
                                   '<div class="name"><a target="_blank" href="http://weibo.com/'+person.id+'">'+person.name+'</a></div>'   +
@@ -151,7 +158,7 @@
     res()
     res()
     res()
-    window.addEventListener("scroll",function(){
+    $(window).bind("scroll",function(){
         if($('#bottom').get(0).getBoundingClientRect().bottom <= screen.height)
            res()
     })
